@@ -51,9 +51,9 @@ export default {
         serif: ["Merriweather", "Georgia", "serif"],
       },
       keyframes: {
-        "page-turn": {
-          "0%": { transform: "translateX(0)" },
-          "100%": { transform: "translateX(-100%)" },
+        "page-flip": {
+          "0%": { transform: "rotateY(0deg)" },
+          "100%": { transform: "rotateY(-180deg)" },
         },
         "fade-in": {
           "0%": { opacity: "0" },
@@ -61,7 +61,7 @@ export default {
         },
       },
       animation: {
-        "page-turn": "page-turn 0.5s ease-in-out",
+        "page-flip": "page-flip 0.3s ease-in-out",
         "fade-in": "fade-in 0.3s ease-in-out",
       },
     },
