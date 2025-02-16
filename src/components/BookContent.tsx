@@ -47,10 +47,13 @@ interface BookContentProps {
   fontSize: number;
 }
 
-export const BookContent = ({ fontSize }: BookContentProps) => {
+export const BookContent = ({ fontSize: initialFontSize }: BookContentProps) => {
   const [currentChapter, setCurrentChapter] = useState(0);
   const [isFlipping, setIsFlipping] = useState(false);
   const [direction, setDirection] = useState<'next' | 'prev'>('next');
+  const [fontSize, setFontSize] = useState(initialFontSize);
+  const [currentPage, setCurrentPage] = useState(`${currentChapter + 1}`);
+  const [isHighlighting, setIsHighlighting] = useState(false);
   const pageRef = useRef<HTMLDivElement>(null);
 
   const nextChapter = () => {
@@ -59,6 +62,7 @@ export const BookContent = ({ fontSize }: BookContentProps) => {
       setIsFlipping(true);
       setTimeout(() => {
         setCurrentChapter(prev => prev + 1);
+        setCurrentPage(`${currentChapter + 2}`);
         setIsFlipping(false);
       }, 300);
     }
@@ -70,8 +74,28 @@ export const BookContent = ({ fontSize }: BookContentProps) => {
       setIsFlipping(true);
       setTimeout(() => {
         setCurrentChapter(prev => prev - 1);
+        setCurrentPage(`${currentChapter}`);
         setIsFlipping(false);
       }, 300);
+    }
+  };
+
+  const handlePageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newPage = parseInt(event.target.value);
+    if (!isNaN(newPage) && newPage >= 1 && newPage <= sampleChapters.length) {
+      setCurrentPage(event.target.value);
+      setCurrentChapter(newPage - 1);
+    }
+  };
+
+  const handlePageSubmit = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      const newPage = parseInt(currentPage);
+      if (!isNaN(newPage) && newPage >= 1 && newPage <= sampleChapters.length) {
+        setCurrentChapter(newPage - 1);
+      } else {
+        setCurrentPage(`${currentChapter + 1}`);
+      }
     }
   };
 
@@ -80,6 +104,36 @@ export const BookContent = ({ fontSize }: BookContentProps) => {
       document.documentElement.requestFullscreen();
     } else {
       document.exitFullscreen();
+    }
+  };
+
+  const zoomIn = () => {
+    setFontSize(prev => Math.min(prev + 10, 150));
+  };
+
+  const zoomOut = () => {
+    setFontSize(prev => Math.max(prev - 10, 80));
+  };
+
+  const toggleHighlighter = () => {
+    setIsHighlighting(!isHighlighting);
+    if (!isHighlighting) {
+      document.body.style.cursor = 'text';
+      document.addEventListener('mouseup', handleHighlight);
+    } else {
+      document.body.style.cursor = 'default';
+      document.removeEventListener('mouseup', handleHighlight);
+    }
+  };
+
+  const handleHighlight = () => {
+    const selection = window.getSelection();
+    if (selection && selection.toString()) {
+      const range = selection.getRangeAt(0);
+      const span = document.createElement('span');
+      span.className = 'bg-yellow-300/50';
+      range.surroundContents(span);
+      selection.removeAllRanges();
     }
   };
 
@@ -92,9 +146,11 @@ export const BookContent = ({ fontSize }: BookContentProps) => {
           <input 
             type="text" 
             className="w-16 px-2 py-1 text-sm bg-[#8B4513] border border-[#FFA500] rounded"
-            value={`${currentChapter + 1} / ${sampleChapters.length}`}
-            readOnly
+            value={currentPage}
+            onChange={handlePageChange}
+            onKeyDown={handlePageSubmit}
           />
+          <span className="text-sm">/ {sampleChapters.length}</span>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" className="text-white hover:bg-[#8B4513]">
@@ -172,16 +228,36 @@ export const BookContent = ({ fontSize }: BookContentProps) => {
         <Button variant="ghost" size="sm" className="text-white hover:bg-[#8B4513]">
           <Search className="w-4 h-4" />
         </Button>
-        <Button variant="ghost" size="sm" className="text-white hover:bg-[#8B4513]">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="text-white hover:bg-[#8B4513]"
+          onClick={zoomOut}
+        >
           <ZoomOut className="w-4 h-4" />
         </Button>
-        <Button variant="ghost" size="sm" className="text-white hover:bg-[#8B4513]">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="text-white hover:bg-[#8B4513]"
+          onClick={zoomIn}
+        >
           <ZoomIn className="w-4 h-4" />
         </Button>
-        <Button variant="ghost" size="sm" className="text-white hover:bg-[#8B4513]" onClick={toggleFullscreen}>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="text-white hover:bg-[#8B4513]" 
+          onClick={toggleFullscreen}
+        >
           <Maximize2 className="w-4 h-4" />
         </Button>
-        <Button variant="ghost" size="sm" className="text-white hover:bg-[#8B4513]">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className={`text-white hover:bg-[#8B4513] ${isHighlighting ? 'bg-[#8B4513]' : ''}`}
+          onClick={toggleHighlighter}
+        >
           <PenLine className="w-4 h-4" />
         </Button>
       </div>
