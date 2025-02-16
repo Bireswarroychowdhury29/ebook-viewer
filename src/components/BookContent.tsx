@@ -17,16 +17,29 @@ import { Button } from '@/components/ui/button';
 interface Chapter {
   title: string;
   content: string;
+  image?: string;
 }
 
 const sampleChapters: Chapter[] = [
   {
-    title: "My Blue Book of Grammar",
-    content: "Welcome to our interactive grammar learning experience. This platform is designed to make learning grammar comfortable and enjoyable across all devices."
+    title: "My Orange Book of Grammar",
+    content: "Welcome to our interactive grammar learning experience. This platform is designed to make learning grammar comfortable and enjoyable across all devices.",
+    image: "https://images.unsplash.com/photo-1500673922987-e212871fec22?auto=format&fit=crop&w=800&q=80"
   },
   {
     title: "Chapter 1: Grammar Basics",
-    content: "Grammar is the foundation of language. In this chapter, we'll explore the basic building blocks that help us communicate effectively."
+    content: "Grammar is the foundation of language. In this chapter, we'll explore the basic building blocks that help us communicate effectively.",
+    image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    title: "Chapter 2: Parts of Speech",
+    content: "Understanding parts of speech is crucial for mastering any language. Let's dive into nouns, verbs, adjectives, and more.",
+    image: "https://images.unsplash.com/photo-1460574283810-2aab119d8511?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    title: "Chapter 3: Sentence Structure",
+    content: "A well-structured sentence is like a well-built house. Learn how to construct sentences that are both grammatically correct and effective.",
+    image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&w=800&q=80"
   },
 ];
 
@@ -71,23 +84,23 @@ export const BookContent = ({ fontSize }: BookContentProps) => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-[#003366]">
+    <div className="flex flex-col h-screen bg-[#8B4513]">
       {/* Top Navigation */}
-      <div className="bg-[#002347] text-white p-2 flex items-center justify-between border-b border-blue-800">
+      <div className="bg-[#663300] text-white p-2 flex items-center justify-between border-b border-[#FFA500]">
         <div className="flex items-center gap-2">
           <span className="text-sm">Go to page</span>
           <input 
             type="text" 
-            className="w-16 px-2 py-1 text-sm bg-blue-900 border border-blue-700 rounded"
+            className="w-16 px-2 py-1 text-sm bg-[#8B4513] border border-[#FFA500] rounded"
             value={`${currentChapter + 1} / ${sampleChapters.length}`}
             readOnly
           />
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="text-white hover:bg-blue-800">
+          <Button variant="ghost" size="sm" className="text-white hover:bg-[#8B4513]">
             <Image className="w-4 h-4" />
           </Button>
-          <Button variant="ghost" size="sm" className="text-white hover:bg-blue-800">
+          <Button variant="ghost" size="sm" className="text-white hover:bg-[#8B4513]">
             <VolumeX className="w-4 h-4" />
           </Button>
         </div>
@@ -99,7 +112,7 @@ export const BookContent = ({ fontSize }: BookContentProps) => {
           variant="ghost"
           onClick={previousChapter}
           disabled={currentChapter === 0 || isFlipping}
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:bg-blue-800/50"
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:bg-[#8B4513]/50"
         >
           <ChevronLeft className="w-8 h-8" />
         </Button>
@@ -122,9 +135,18 @@ export const BookContent = ({ fontSize }: BookContentProps) => {
               ${isFlipping && direction === 'next' ? 'rotate-y-90' : ''}
               ${isFlipping && direction === 'prev' ? '-rotate-y-90' : ''}
             `}>
-              <h1 className="text-3xl font-bold mb-6 text-center text-yellow-400">
+              <h1 className="text-3xl font-bold mb-6 text-center text-[#FFA500]">
                 {sampleChapters[currentChapter].title}
               </h1>
+              {sampleChapters[currentChapter].image && (
+                <div className="mb-6">
+                  <img 
+                    src={sampleChapters[currentChapter].image} 
+                    alt={sampleChapters[currentChapter].title}
+                    className="w-full h-64 object-cover rounded-lg shadow-lg"
+                  />
+                </div>
+              )}
               <p className="leading-relaxed text-white">
                 {sampleChapters[currentChapter].content}
               </p>
@@ -136,30 +158,30 @@ export const BookContent = ({ fontSize }: BookContentProps) => {
           variant="ghost"
           onClick={nextChapter}
           disabled={currentChapter === sampleChapters.length - 1 || isFlipping}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:bg-blue-800/50"
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:bg-[#8B4513]/50"
         >
           <ChevronRight className="w-8 h-8" />
         </Button>
       </div>
 
       {/* Bottom Toolbar */}
-      <div className="bg-[#002347] text-white p-2 flex items-center justify-center gap-2 border-t border-blue-800">
-        <Button variant="ghost" size="sm" className="text-white hover:bg-blue-800">
+      <div className="bg-[#663300] text-white p-2 flex items-center justify-center gap-2 border-t border-[#FFA500]">
+        <Button variant="ghost" size="sm" className="text-white hover:bg-[#8B4513]">
           <Home className="w-4 h-4" />
         </Button>
-        <Button variant="ghost" size="sm" className="text-white hover:bg-blue-800">
+        <Button variant="ghost" size="sm" className="text-white hover:bg-[#8B4513]">
           <Search className="w-4 h-4" />
         </Button>
-        <Button variant="ghost" size="sm" className="text-white hover:bg-blue-800">
+        <Button variant="ghost" size="sm" className="text-white hover:bg-[#8B4513]">
           <ZoomOut className="w-4 h-4" />
         </Button>
-        <Button variant="ghost" size="sm" className="text-white hover:bg-blue-800">
+        <Button variant="ghost" size="sm" className="text-white hover:bg-[#8B4513]">
           <ZoomIn className="w-4 h-4" />
         </Button>
-        <Button variant="ghost" size="sm" className="text-white hover:bg-blue-800" onClick={toggleFullscreen}>
+        <Button variant="ghost" size="sm" className="text-white hover:bg-[#8B4513]" onClick={toggleFullscreen}>
           <Maximize2 className="w-4 h-4" />
         </Button>
-        <Button variant="ghost" size="sm" className="text-white hover:bg-blue-800">
+        <Button variant="ghost" size="sm" className="text-white hover:bg-[#8B4513]">
           <PenLine className="w-4 h-4" />
         </Button>
       </div>
